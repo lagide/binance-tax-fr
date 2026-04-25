@@ -8,7 +8,10 @@ Script local Python qui calcule tes plus/moins-values crypto pour ta déclaratio
 
 ## Prérequis
 
-- macOS avec Python 3.9 ou plus récent (`python3 --version` pour vérifier)
+- **Python 3.9 ou plus récent**
+  - macOS : `python3 --version`
+  - Windows : `python --version` (depuis [python.org](https://www.python.org/downloads/), bien cocher *Add Python to PATH* à l'install)
+  - Linux : `python3 --version`
 - Un compte Binance avec accès à l'historique complet 2022–2025
 - Aucun autre exchange ou wallet (sinon le calcul sera incomplet)
 
@@ -26,29 +29,33 @@ Script local Python qui calcule tes plus/moins-values crypto pour ta déclaratio
 
 ## Étape 2 : Configurer les clés
 
-1. Dans le dossier du projet, copie `.env.example` vers `.env` :
-   ```bash
-   cp .env.example .env
-   ```
+1. Dans le dossier du projet, copie `.env.example` vers `.env`
+   - macOS / Linux : `cp .env.example .env`
+   - Windows (PowerShell) : `Copy-Item .env.example .env`
 2. Ouvre `.env` dans un éditeur de texte
 3. Remplace `ta_cle_ici` et `ton_secret_ici` par tes vraies clés Binance
 4. **Ne partage JAMAIS ce fichier `.env`** : il contient tes secrets
 
 ## Étape 3 : Installation
 
-Double-clique sur **`install.command`** dans le Finder.
+### macOS / Linux
+Double-clique sur **`install.command`** dans le Finder (ou `./install.command` en terminal).
 
-(Si macOS bloque, fais clic droit => Ouvrir => confirme. Ou en terminal : `chmod +x install.command run.command`.)
+Si macOS bloque, fais clic droit => Ouvrir => confirme. Sinon en terminal : `chmod +x install.command run.command`.
+
+### Windows
+Double-clique sur **`install.bat`**.
 
 L'installation crée un environnement Python virtuel (`venv/`) et installe les dépendances.
 
 ## Étape 4 : Lancer le rapport
 
-Double-clique sur **`run.command`**.
+- macOS / Linux : double-clique sur **`run.command`**
+- Windows : double-clique sur **`run.bat`**
 
 Le script :
 1. Récupère tout l'historique Binance depuis 31/01/2022
-2. Récupère les prix EUR via CoinGecko (gratuit, peut prendre 5-15 min la 1ʳᵉ fois)
+2. Récupère les prix EUR via les klines publiques Binance (peut prendre 1 à 2 min la 1ʳᵉ fois)
 3. Applique la formule officielle française pour chaque cession SEPA EUR de 2025
 4. Génère `rapport_fiscal_2025.html` et l'ouvre automatiquement
 
@@ -64,7 +71,7 @@ Le rapport HTML contient :
 - ✅ Cocher la case **8UU** sur le formulaire 2042 (compte d'actifs numériques à l'étranger)
 - ✅ Remplir un formulaire **3916-bis** par compte étranger (= 1 pour Binance)
 
-Pour imprimer en PDF : ouvre le fichier HTML dans Safari/Chrome => `⌘P` => Enregistrer en PDF.
+Pour imprimer en PDF : ouvre le fichier HTML dans un navigateur => `Ctrl/⌘ + P` => Enregistrer en PDF.
 
 ---
 
@@ -72,19 +79,20 @@ Pour imprimer en PDF : ouvre le fichier HTML dans Safari/Chrome => `⌘P` => Enr
 
 - Les clés API restent en local, dans `.env` (jamais envoyées ailleurs)
 - L'API Binance est appelée en **lecture seule**
-- CoinGecko est interrogé sans clé API (juste les prix publics)
+- Les prix historiques viennent des klines publiques Binance (pas de clé tierce)
 - Aucun envoi de données vers un serveur tiers
 
 ## Dépannage
 
 - **"Invalid API-key"** : vérifie le contenu de `.env`, et que la clé est bien activée côté Binance
-- **Rate limit CoinGecko** : le script respecte un délai entre appels ; relance si interrompu (cache local utilisé)
+- **`python` non reconnu (Windows)** : réinstalle Python depuis python.org en cochant *Add Python to PATH*
+- **Rate limit Binance** : le script gère et attend automatiquement, relance si nécessaire (un cache local est utilisé)
 - **Aucune cession trouvée** : vérifie que tu as bien fait des retraits SEPA en 2025 sur Binance
 
 ## Limites
 
 - Couvre uniquement Binance. Si tu as d'autres wallets, le calcul est faux.
 - Ne gère pas les airdrops, NFT, futures, marges, etc.
-- Si CoinGecko ne connaît pas un token, il est ignoré (avertissement affiché).
+- Si un token n'est plus listé / a été renommé sur Binance, il peut être ignoré (avertissement affiché ; ex : MATIC renommé POL en sept. 2024).
 
 Pour un rapport officiel et exhaustif, **recommandation** : [Waltio](https://www.waltio.com) ou [Koinly](https://koinly.io).
