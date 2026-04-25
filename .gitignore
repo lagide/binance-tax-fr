@@ -3,7 +3,7 @@
 .env.local
 .env.*.local
 
-# Données personnelles / financières — JAMAIS publier
+# Données personnelles / financières :JAMAIS publier
 rapport_fiscal_*.html
 cache_donnees_binance.json
 cache_prix_coingecko.json

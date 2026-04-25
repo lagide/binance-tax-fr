@@ -1,4 +1,4 @@
-# Binance Tax FR — Calcul plus/moins-values crypto 2025
+# Binance Tax FR : Calcul plus/moins-values crypto 2025
 
 Script local Python qui calcule tes plus/moins-values crypto pour ta déclaration fiscale française 2025 (formulaire 2086) à partir de l'API Binance, selon la méthode officielle de l'article 150 VH bis du CGI.
 
@@ -12,7 +12,7 @@ Script local Python qui calcule tes plus/moins-values crypto pour ta déclaratio
 - Un compte Binance avec accès à l'historique complet 2022–2025
 - Aucun autre exchange ou wallet (sinon le calcul sera incomplet)
 
-## Étape 1 — Créer une clé API Binance (lecture seule)
+## Étape 1 : Créer une clé API Binance (lecture seule)
 
 1. Connecte-toi sur [binance.com](https://www.binance.com)
 2. Menu profil (en haut à droite) → **API Management**
@@ -22,9 +22,9 @@ Script local Python qui calcule tes plus/moins-values crypto pour ta déclaratio
    - ✅ Coche UNIQUEMENT **Enable Reading**
    - ❌ Décoche tout le reste (Enable Spot Trading, Enable Withdrawals, etc.)
    - ✅ Restriction IP : recommandé (ajoute ton IP fixe si possible)
-6. Sauvegarde ta `API Key` et ton `Secret Key` — le secret n'est affiché qu'une seule fois !
+6. Sauvegarde ta `API Key` et ton `Secret Key` : le secret n'est affiché qu'une seule fois !
 
-## Étape 2 — Configurer les clés
+## Étape 2 : Configurer les clés
 
 1. Dans le dossier du projet, copie `.env.example` vers `.env` :
    ```bash
@@ -32,9 +32,9 @@ Script local Python qui calcule tes plus/moins-values crypto pour ta déclaratio
    ```
 2. Ouvre `.env` dans un éditeur de texte
 3. Remplace `ta_cle_ici` et `ton_secret_ici` par tes vraies clés Binance
-4. **Ne partage JAMAIS ce fichier `.env`** — il contient tes secrets
+4. **Ne partage JAMAIS ce fichier `.env`** : il contient tes secrets
 
-## Étape 3 — Installation
+## Étape 3 : Installation
 
 Double-clique sur **`install.command`** dans le Finder.
 
@@ -42,7 +42,7 @@ Double-clique sur **`install.command`** dans le Finder.
 
 L'installation crée un environnement Python virtuel (`venv/`) et installe les dépendances.
 
-## Étape 4 — Lancer le rapport
+## Étape 4 : Lancer le rapport
 
 Double-clique sur **`run.command`**.
 

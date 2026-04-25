@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-binance_tax.py — Calcul plus/moins-values crypto 2025 pour formulaire 2086 (France)
+binance_tax.py :Calcul plus/moins-values crypto 2025 pour formulaire 2086 (France)
 Méthode officielle : article 150 VH bis du CGI (prix moyen pondéré global).
 
 Ce script est une AIDE au calcul, pas un document fiscal opposable.
@@ -157,7 +157,7 @@ class CachePrix:
 
 
 # ───────────────────────────────────────────────────────────────────────────────
-# Résolution des prix (klines Binance — gratuit, public, sans auth)
+# Résolution des prix (klines Binance :gratuit, public, sans auth)
 # ───────────────────────────────────────────────────────────────────────────────
 
 class ResolveurPrix:
@@ -622,7 +622,7 @@ def valeur_portefeuille_crypto(balances: dict, dt: datetime, resolveur: Resolveu
 
 
 # ───────────────────────────────────────────────────────────────────────────────
-# Calcul fiscal — méthode 150 VH bis CGI
+# Calcul fiscal :méthode 150 VH bis CGI
 # ───────────────────────────────────────────────────────────────────────────────
 
 def calculer_cessions(events, resolveur: ResolveurPrix):
@@ -741,7 +741,7 @@ def generer_html(cessions, deposits_log, balances_finales, resolveur, assets_inc
 <html lang="fr"><head><meta charset="utf-8">
 <title>Rapport fiscal crypto {ANNEE_FISCALE}</title>
 <style>{CSS}</style></head><body>
-<h1>Rapport fiscal crypto — Année {ANNEE_FISCALE}</h1>
+<h1>Rapport fiscal crypto :Année {ANNEE_FISCALE}</h1>
 <p><em>Généré le {now.strftime('%d/%m/%Y à %H:%M')}</em></p>
 
 <div class="danger">
@@ -795,7 +795,7 @@ Méthode appliquée : article <strong>150 VH bis du CGI</strong> (prix moyen pon
 </div>""")
 
     # ─── Dépôts EUR
-    html.append("<h2>3. Justificatif — Dépôts EUR cumulés (depuis 31/01/2022)</h2>")
+    html.append("<h2>3. Justificatif :Dépôts EUR cumulés (depuis 31/01/2022)</h2>")
     html.append("""<table>
 <tr><th>Date</th><th>Montant déposé (net)</th><th>PTA cumulé après dépôt</th></tr>""")
     for d in deposits_log:
@@ -845,8 +845,8 @@ Méthode appliquée : article <strong>150 VH bis du CGI</strong> (prix moyen pon
 
     if assets_inconnus:
         html.append(f"""<div class="danger">
-<strong>⚠️ Assets non valorisés :</strong> {', '.join(sorted(assets_inconnus))}
-— ces actifs n'ont pas été trouvés via les klines Binance (delistés, renommés ou paire
+<strong>⚠️ Assets non valorisés :</strong> {', '.join(sorted(assets_inconnus))}.
+Ces actifs n'ont pas été trouvés via les klines Binance (delistés, renommés ou paire
 inexistante) et leur prix n'a pas pu être inclus dans la valeur globale du portefeuille.
 Vérifie manuellement (ex : MATIC a été renommé POL en septembre 2024).
 </div>""")
@@ -866,7 +866,7 @@ Pour un rapport fiscal certifié et opposable, recommandation :
 
 def main():
     print("=" * 70)
-    print(" Binance Tax FR — Calcul plus/moins-values crypto 2025")
+    print(" Binance Tax FR :Calcul plus/moins-values crypto 2025")
     print(" Méthode : article 150 VH bis du CGI")
     print("=" * 70)
 
@@ -937,7 +937,7 @@ def main():
     print()
     print("=" * 70)
     try:
-        print(f" [OK] Terminé — rapport : {RAPPORT_FILE}")
+        print(f" [OK] Terminé :rapport : {RAPPORT_FILE}")
     except UnicodeEncodeError:
         # Console Windows en cp1252 : on retombe sur de l'ASCII pur
         print(" [OK] Termine - rapport : " + str(RAPPORT_FILE).encode("ascii", "replace").decode("ascii"))
