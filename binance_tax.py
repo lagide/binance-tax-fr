@@ -42,7 +42,7 @@ FIAT_DEVISES = {"EUR", "USD", "GBP"}
 # Quote assets à tester pour découvrir les paires de l'utilisateur
 QUOTES_COMMUNS = ["USDT", "EUR", "BUSD", "FDUSD", "BTC", "ETH", "BNB", "USDC"]
 
-# Mapping symbole Binance → ID CoinGecko (extensible si besoin)
+# Mapping symbole Binance -> ID CoinGecko (extensible si besoin)
 # Liste des coins les plus courants. Si un asset n'est pas listé ici,
 # le script tentera une résolution dynamique via /coins/list.
 MAPPING_COINGECKO_STATIQUE = {
@@ -164,10 +164,10 @@ class ResolveurPrix:
     """
     Récupère les prix EUR historiques via l'endpoint public Binance /api/v3/klines.
     Stratégie :
-      1. Si paire {ASSET}EUR existe → close du jour J
+      1. Si paire {ASSET}EUR existe -> close du jour J
       2. Sinon : {ASSET}USDT × (1/EURUSDT du jour J)
-      3. Stablecoins USD-pegged → 1/EURUSDT
-      4. EUR → 1
+      3. Stablecoins USD-pegged -> 1/EURUSDT
+      4. EUR -> 1
     """
 
     URL_KLINES = "https://api.binance.com/api/v3/klines"
@@ -327,7 +327,7 @@ class CollecteurBinance:
                     log.warning("Binance rate limit, attente 60s...")
                     time.sleep(60)
                     continue
-                # endpoint inexistant pour ce compte → on remonte vide
+                # endpoint inexistant pour ce compte -> on remonte vide
                 if e.code in (-2008, -1121, -1100):
                     return None
                 log.warning("BinanceAPIException %s : %s", e.code, e.message)
@@ -491,7 +491,7 @@ def construire_ledger(deposits_fiat, withdrawals_fiat, trades_spot, converts, re
     """
     evts = []
 
-    # Dépôts fiat → ajoutent EUR (mais EUR n'est pas comptabilisé dans le portefeuille crypto)
+    # Dépôts fiat -> ajoutent EUR (mais EUR n'est pas comptabilisé dans le portefeuille crypto)
     for d in deposits_fiat:
         if (d.get("status") or "").lower() not in ("successful", "completed", "success"):
             continue
@@ -506,7 +506,7 @@ def construire_ledger(deposits_fiat, withdrawals_fiat, trades_spot, converts, re
             "meta": d,
         })
 
-    # Retraits fiat → cessions
+    # Retraits fiat -> cessions
     for w in withdrawals_fiat:
         if (w.get("status") or "").lower() not in ("successful", "completed", "success"):
             continue
@@ -527,7 +527,7 @@ def construire_ledger(deposits_fiat, withdrawals_fiat, trades_spot, converts, re
     # Trades spot
     for tr in trades_spot:
         sym = tr["_symbol"]
-        # On a besoin de connaître base/quote → on parse via exchangeInfo plus tard
+        # On a besoin de connaître base/quote -> on parse via exchangeInfo plus tard
         # Approche simple : récupère via le dict (commission, isBuyer, qty, quoteQty, price)
         t = from_ms(int(tr["time"]))
         qty = Decimal(str(tr["qty"]))
@@ -535,7 +535,7 @@ def construire_ledger(deposits_fiat, withdrawals_fiat, trades_spot, converts, re
         commission = Decimal(str(tr.get("commission", "0") or 0))
         commission_asset = tr.get("commissionAsset")
         is_buyer = tr.get("isBuyer", False)
-        # Symbole = base+quote → on déduit base/quote en cherchant un quote connu
+        # Symbole = base+quote -> on déduit base/quote en cherchant un quote connu
         base, quote = _split_symbol(sym)
         if not base or not quote:
             continue
@@ -788,9 +788,9 @@ Méthode appliquée : article <strong>150 VH bis du CGI</strong> (prix moyen pon
     html.append("<h2>2. Totaux à reporter</h2>")
     html.append(f"""<div class="ok">
 <p><strong>Total plus-values {ANNEE_FISCALE} :</strong> {fmt_eur(total_pv)}<br>
-→ À reporter case <strong>3AN</strong> du formulaire <strong>2042 C</strong></p>
+-> À reporter case <strong>3AN</strong> du formulaire <strong>2042 C</strong></p>
 <p><strong>Total moins-values {ANNEE_FISCALE} :</strong> {fmt_eur(abs(total_mv))}<br>
-→ À reporter case <strong>3BN</strong> du formulaire <strong>2042 C</strong> (reportable 10 ans)</p>
+-> À reporter case <strong>3BN</strong> du formulaire <strong>2042 C</strong> (reportable 10 ans)</p>
 <p><strong>Solde net imposable :</strong> {fmt_eur(solde_net)}</p>
 </div>""")
 
@@ -887,24 +887,24 @@ def main():
 
     collecteur = CollecteurBinance(client)
 
-    log.info("[2/6] Récupération des dépôts/retraits fiat EUR (2022 → 2025)...")
+    log.info("[2/6] Récupération des dépôts/retraits fiat EUR (2022 -> 2025)...")
     deposits_fiat = collecteur.fiat_history("0") or []
     withdrawals_fiat = collecteur.fiat_history("1") or []
-    log.info("  → %d dépôts fiat, %d retraits fiat", len(deposits_fiat), len(withdrawals_fiat))
+    log.info("  -> %d dépôts fiat, %d retraits fiat", len(deposits_fiat), len(withdrawals_fiat))
 
     log.info("[3/6] Récupération des conversions Convert...")
     converts = collecteur.convert_history() or []
-    log.info("  → %d conversions", len(converts))
+    log.info("  -> %d conversions", len(converts))
 
     log.info("[4/6] Découverte des assets puis récupération des trades spot...")
     assets = collecteur.decouvrir_assets(deposits_fiat, withdrawals_fiat, converts)
-    log.info("  → %d assets identifiés : %s", len(assets), ", ".join(sorted(assets)))
+    log.info("  -> %d assets identifiés : %s", len(assets), ", ".join(sorted(assets)))
     trades_spot = collecteur.tous_les_trades(assets) or []
-    log.info("  → %d trades spot récupérés", len(trades_spot))
+    log.info("  -> %d trades spot récupérés", len(trades_spot))
 
     log.info("[5/6] Récupération des récompenses Earn (best-effort)...")
     rewards = collecteur.earn_rewards() or []
-    log.info("  → %d récompenses", len(rewards))
+    log.info("  -> %d récompenses", len(rewards))
 
     # Sauvegarde brute pour audit / debug
     try:
@@ -924,10 +924,10 @@ def main():
     resolveur = ResolveurPrix(cache)
 
     events = construire_ledger(deposits_fiat, withdrawals_fiat, trades_spot, converts, rewards)
-    log.info("  → %d événements consolidés", len(events))
+    log.info("  -> %d événements consolidés", len(events))
 
     cessions, deposits_log, balances_finales = calculer_cessions(events, resolveur)
-    log.info("  → %d cessions traitées dont %d en %d",
+    log.info("  -> %d cessions traitées dont %d en %d",
              len(cessions),
              len([c for c in cessions if c["date"].year == ANNEE_FISCALE]),
              ANNEE_FISCALE)
