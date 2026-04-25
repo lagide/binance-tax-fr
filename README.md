@@ -15,8 +15,8 @@ Script local Python qui calcule tes plus/moins-values crypto pour ta déclaratio
 ## Étape 1 : Créer une clé API Binance (lecture seule)
 
 1. Connecte-toi sur [binance.com](https://www.binance.com)
-2. Menu profil (en haut à droite) -> **API Management**
-3. Clique **Create API** -> choisir **System generated**
+2. Menu profil (en haut à droite) => **API Management**
+3. Clique **Create API** => choisir **System generated**
 4. Donne un label (ex : `tax-fr-readonly`) et valide avec ton 2FA
 5. Une fois créée, clique **Edit restrictions** :
    - ✅ Coche UNIQUEMENT **Enable Reading**
@@ -38,7 +38,7 @@ Script local Python qui calcule tes plus/moins-values crypto pour ta déclaratio
 
 Double-clique sur **`install.command`** dans le Finder.
 
-(Si macOS bloque, fais clic droit -> Ouvrir -> confirme. Ou en terminal : `chmod +x install.command run.command`.)
+(Si macOS bloque, fais clic droit => Ouvrir => confirme. Ou en terminal : `chmod +x install.command run.command`.)
 
 L'installation crée un environnement Python virtuel (`venv/`) et installe les dépendances.
 
@@ -55,16 +55,16 @@ Le script :
 ## Que faire avec le rapport ?
 
 Le rapport HTML contient :
-- Le détail des 6 cessions SEPA 2025 -> à reporter dans le **formulaire 2086**
-- Le total plus-values -> case **3AN** du formulaire **2042 C**
-- Le total moins-values -> case **3BN** (reportables 10 ans)
+- Le détail des 6 cessions SEPA 2025 => à reporter dans le **formulaire 2086**
+- Le total plus-values => case **3AN** du formulaire **2042 C**
+- Le total moins-values => case **3BN** (reportables 10 ans)
 - Liste des actifs au 31/12/2025
 
 **Ne pas oublier** :
 - ✅ Cocher la case **8UU** sur le formulaire 2042 (compte d'actifs numériques à l'étranger)
 - ✅ Remplir un formulaire **3916-bis** par compte étranger (= 1 pour Binance)
 
-Pour imprimer en PDF : ouvre le fichier HTML dans Safari/Chrome -> `⌘P` -> Enregistrer en PDF.
+Pour imprimer en PDF : ouvre le fichier HTML dans Safari/Chrome => `⌘P` => Enregistrer en PDF.
 
 ---
 
