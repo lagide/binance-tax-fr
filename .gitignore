@@ -17,6 +17,12 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 
+# Build executable
+build/
+dist/
+*.spec
+.chrome-profile/
+
 # OS / IDE
 .DS_Store
 Thumbs.db

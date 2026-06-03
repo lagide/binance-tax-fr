@@ -15,6 +15,7 @@ import logging
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from decimal import Decimal, getcontext
+from typing import Optional
 
 import requests
 from dotenv import load_dotenv
@@ -27,7 +28,14 @@ from binance.exceptions import BinanceAPIException, BinanceRequestException
 
 getcontext().prec = 28  # précision décimale élevée
 
-BASE_DIR = Path(__file__).parent.resolve()
+def app_base_dir() -> Path:
+    """Return the project folder, or the executable folder once packaged."""
+    if getattr(sys, "frozen", False):
+        return Path(sys.executable).parent.resolve()
+    return Path(__file__).parent.resolve()
+
+
+BASE_DIR = app_base_dir()
 CACHE_PRICES_FILE = BASE_DIR / "cache_prix_coingecko.json"
 CACHE_RAW_FILE = BASE_DIR / "cache_donnees_binance.json"
 RAPPORT_FILE = BASE_DIR / "rapport_fiscal_2025.html"
@@ -864,26 +872,20 @@ Pour un rapport fiscal certifié et opposable, recommandation :
 # Main
 # ───────────────────────────────────────────────────────────────────────────────
 
-def main():
-    print("=" * 70)
-    print(" Binance Tax FR :Calcul plus/moins-values crypto 2025")
-    print(" Méthode : article 150 VH bis du CGI")
-    print("=" * 70)
-
+def run_report(api_key: Optional[str] = None, api_secret: Optional[str] = None) -> Path:
+    """Run the full tax calculation and return the generated report path."""
     load_dotenv(BASE_DIR / ".env")
-    api_key = os.getenv("BINANCE_API_KEY", "").strip()
-    api_secret = os.getenv("BINANCE_API_SECRET", "").strip()
+    api_key = (api_key or os.getenv("BINANCE_API_KEY", "")).strip()
+    api_secret = (api_secret or os.getenv("BINANCE_API_SECRET", "")).strip()
     if not api_key or not api_secret or api_key == "ta_cle_ici":
-        log.error("Clés API manquantes. Copie .env.example vers .env et renseigne tes clés.")
-        sys.exit(1)
+        raise RuntimeError("Cles API manquantes. Renseigne une API Key et un Secret Binance en lecture seule.")
 
     log.info("[1/6] Connexion à l'API Binance...")
     try:
         client = Client(api_key, api_secret)
         client.ping()
     except Exception as e:
-        log.error("Connexion Binance impossible : %s", e)
-        sys.exit(1)
+        raise RuntimeError(f"Connexion Binance impossible : {e}") from e
 
     collecteur = CollecteurBinance(client)
 
@@ -933,14 +935,28 @@ def main():
              ANNEE_FISCALE)
 
     generer_html(cessions, deposits_log, balances_finales, resolveur, resolveur.assets_inconnus)
+    return RAPPORT_FILE
+
+
+def main():
+    print("=" * 70)
+    print(" Binance Tax FR :Calcul plus/moins-values crypto 2025")
+    print(" Méthode : article 150 VH bis du CGI")
+    print("=" * 70)
+
+    try:
+        rapport = run_report()
+    except Exception as e:
+        log.error("%s", e)
+        sys.exit(1)
 
     print()
     print("=" * 70)
     try:
-        print(f" [OK] Terminé :rapport : {RAPPORT_FILE}")
+        print(f" [OK] Terminé :rapport : {rapport}")
     except UnicodeEncodeError:
         # Console Windows en cp1252 : on retombe sur de l'ASCII pur
-        print(" [OK] Termine - rapport : " + str(RAPPORT_FILE).encode("ascii", "replace").decode("ascii"))
+        print(" [OK] Termine - rapport : " + str(rapport).encode("ascii", "replace").decode("ascii"))
     print("=" * 70)
 
 
